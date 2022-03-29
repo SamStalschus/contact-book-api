@@ -2,7 +2,9 @@ package com.contactbookapi.exception.handler;
 
 import com.contactbookapi.dto.ErrorMessageDTO;
 import com.contactbookapi.dto.InvalidParamsDTO;
+import com.contactbookapi.exception.ContactAlreadyExistsException;
 import com.contactbookapi.exception.MissingParamsException;
+import com.contactbookapi.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -83,4 +85,22 @@ public class AppExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
     }
 
+    /**
+     * Handle persistencia response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = ContactAlreadyExistsException.class)
+    protected ResponseEntity<Object> handlePersistencia(ContactAlreadyExistsException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDTO(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = NotFoundException.class)
+    protected ResponseEntity<Object> handlePersistencia(NotFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDTO(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+    }
 }
