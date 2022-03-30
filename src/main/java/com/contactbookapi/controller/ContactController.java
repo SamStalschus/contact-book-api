@@ -1,6 +1,7 @@
 package com.contactbookapi.controller;
 
 import com.contactbookapi.dto.ContactDTO;
+import com.contactbookapi.enums.FilterContactTypes;
 import com.contactbookapi.service.impl.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,20 @@ public class ContactController {
     public ResponseEntity<ContactDTO> listAll(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ContactDTO.convert(contactService.getById(id))
+        );
+    }
+
+    /** Método usado para filtrar a busca de um contato.
+     *
+     * @author Samuel Stalschus
+     *
+     * @return Cliente
+     *
+     * */
+    @GetMapping("/filter")
+    public ResponseEntity<List<ContactDTO>> getByFilter(@RequestParam FilterContactTypes filterType, @RequestParam String filterValue) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                contactService.getContactsByFilter(filterType, filterValue).stream().map(ContactDTO::convert).collect(Collectors.toList())
         );
     }
 

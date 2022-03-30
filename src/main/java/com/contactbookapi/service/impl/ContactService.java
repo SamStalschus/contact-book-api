@@ -1,11 +1,14 @@
 package com.contactbookapi.service.impl;
 
 import com.contactbookapi.domain.Contact;
+import com.contactbookapi.enums.FilterContactTypes;
 import com.contactbookapi.exception.ContactAlreadyExistsException;
+import com.contactbookapi.exception.MissingParamsException;
 import com.contactbookapi.exception.NotFoundException;
 import com.contactbookapi.repository.ContactRepository;
 import com.contactbookapi.service.IContactService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -43,6 +46,18 @@ public class ContactService implements IContactService<Contact, Long> {
 
     public Contact update(Contact contact) {
         return contactRepository.saveAndFlush(contact);
+    }
+
+    public List<Contact> getContactsByFilter(FilterContactTypes filterType, String filterValue) {
+        if(filterType.equals(FilterContactTypes.NAME))
+            return contactRepository.findByNameContains(filterValue);
+        else if(filterType.equals(FilterContactTypes.NICKNAME))
+            return contactRepository.findByNicknameContains(filterValue);
+        else if(filterType.equals(FilterContactTypes.NUMBER))
+            return contactRepository.findByNumberContains(filterValue);
+        else if(filterType.equals(FilterContactTypes.EMAIL))
+            return contactRepository.findByEmailContains(filterValue);
+        else throw new MissingParamsException("Filter used don't exists ");
     }
 
     public void deleteById(Long id) {
