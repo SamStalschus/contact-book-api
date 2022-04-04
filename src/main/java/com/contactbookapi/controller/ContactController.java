@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * */
 @RestController
-@RequestMapping("/contact")
+@RequestMapping("/api/v1/contact")
 public class ContactController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class ContactController {
      * @return Contato criado
      *
      * */
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<ContactDTO> create(@Valid @RequestBody ContactDTO contactDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ContactDTO.convert(contactService.create(ContactDTO.convert(contactDTO)))
         );
@@ -45,7 +45,7 @@ public class ContactController {
      * @return Contato criado
      *
      * */
-    @PatchMapping("/")
+    @PutMapping("")
     public ResponseEntity<ContactDTO> update(@Valid @RequestBody ContactDTO contactDTO) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ContactDTO.convert(contactService.update(ContactDTO.convert(contactDTO)))
         );
@@ -58,7 +58,7 @@ public class ContactController {
      * @return Lista de DTOs de contatos acoplado ao Response Entity
      *
      * */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<ContactDTO>> listAll() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 contactService.getAll().stream().map(ContactDTO::convert).collect(Collectors.toList())
